@@ -125,7 +125,7 @@ object type_classes {
 
 
 
-  val result = List("a", "b", "c").filter(str => str === 10)
+  val result = List("a", "b", "c").filter(str => str === "")
 
 
 
