@@ -2,27 +2,29 @@ package ru.otus.module2
 
 object homework_hkt_implicits{
 
-  trait Bindable[F[_], A]{
-    def map[B](f: A => B): F[B]
-    def flatMap[B](f: A => F[B]): F[B]
+  trait Bindable[F[_]]{
+    def map[A,B](fa: F[A])(f: A => B): F[B]
+    def flatMap[A,B](fa: F[A])(f: A => F[B]): F[B]
   }
 
   object Bindable{
-    implicit def optBindable[A](opt: Option[A]): Bindable[Option, A] = new Bindable[Option, A] {
-      override def map[B](f: A => B): Option[B] = opt.map(f)
-      override def flatMap[B](f: A => Option[B]): Option[B] = opt.flatMap(a => f(a))
+
+    //имплисит значения для конкретных контейнеров.
+    implicit val optToBindable: Bindable[Option] = new Bindable[Option] {
+      def map[A, B](fa: Option[A])(f: A => B): Option[B] = fa.map(f)
+      def flatMap[A, B](fa: Option[A])(f: A => Option[B]): Option[B] = fa.flatMap(f)
     }
-    implicit def listBindable[A](lst: List[A]): Bindable[List, A] = new Bindable[List, A] {
-      override def map[B](f: A => B): List[B] = lst.map(f)
-      override def flatMap[B](f: A => List[B]): List[B] = lst.flatMap(a => f(a))
+
+    implicit val listToBindable: Bindable[List] = new Bindable[List] {
+      def map[A, B](fa: List[A])(f: A => B): List[B] = fa.map(f)
+      def flatMap[A, B](fa: List[A])(f: A => List[B]): List[B] = fa.flatMap(f)
     }
-    def tuplef[F[_], A, B](fa: Bindable[F,A], fb: Bindable[F,B]): F[(A,B)] =
-      fa.flatMap(a => fb.map(b => (a,b)))
+
+
+    //tupleF с implicit аргументами
+    def tuplef[F[_], A, B](fa: F[A], fb: F[B])(implicit ev: Bindable[F]): F[(A,B)] =
+      ev.flatMap(fa)(a => ev.map(fb)(b => (a,b)))
+
   }
 
 }
-
-import homework_hkt_implicits.Bindable._
-
-tuplef(Some(123),Some("hello"))
-tuplef(List(123),List("hello"))
