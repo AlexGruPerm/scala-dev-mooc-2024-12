@@ -11,8 +11,8 @@ object Main {
 
   def main(args: Array[String]): Unit = {
 
-      println(s"Hello " +
-        s"from ${Thread.currentThread().getName}")
+//      println(s"Hello " +
+//        s"from ${Thread.currentThread().getName}")
 //      val t0 = new threads.Thread1
 //      val t1 = new Thread{
 //        override def run(): Unit = {
@@ -60,6 +60,7 @@ object Main {
     // Thread.sleep(4000)
 //     functionalProgram.declarativeEncoding.interpret(
 //       functionalProgram.declarativeEncoding.greet)
+
 
 
   }

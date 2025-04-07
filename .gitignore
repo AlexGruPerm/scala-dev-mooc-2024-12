@@ -1,7 +1,9 @@
 .bsp
 .idea
-project/target
 target
 .bloop
 .vscode
 .metals
+project/*
+!project/Dependencies.scala
+!project/plugins.sbt
