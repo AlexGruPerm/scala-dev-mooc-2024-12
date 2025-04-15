@@ -11,3 +11,5 @@ libraryDependencies += Dependencies.CatsCore
 libraryDependencies += Dependencies.CatsEffect
 libraryDependencies ++= Dependencies.ZIO
 libraryDependencies ++= Dependencies.ZioConfig
+libraryDependencies ++= Dependencies.fs2
+libraryDependencies ++= Dependencies.http4s

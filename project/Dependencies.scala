@@ -11,10 +11,23 @@ object Dependencies {
                      "dev.zio" %% "zio-test" % ZioVersion  % Test,
                      "dev.zio" %% "zio-test-sbt" % ZioVersion  % Test,
                      "dev.zio" %% "zio-test-magnolia" % ZioVersion % Test)
+
+  lazy val fs2: Seq[ModuleID] = Seq(
+    "co.fs2" %% "fs2-core" % "3.6.1",
+    "co.fs2" %% "fs2-io"   % "3.6.1"
+  )
+
   lazy val ZioConfig: Seq[ModuleID] = Seq(
     "dev.zio" %% "zio-config" % "4.0.2",
     "dev.zio" %% "zio-config-magnolia" % "4.0.2",
     "dev.zio" %% "zio-config-typesafe" % "4.0.2"
+  )
+  lazy val http4s: Seq[ModuleID] = Seq(
+    "org.http4s" %% "http4s-client" % "0.23.18",
+    "org.http4s" %% "http4s-dsl" % "0.23.18",
+    "org.http4s" %% "http4s-ember-server" % "0.23.18",
+    "org.http4s" %% "http4s-ember-client" % "0.23.18",
+
   )
 
 }
