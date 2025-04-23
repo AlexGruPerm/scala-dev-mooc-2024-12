@@ -1,4 +1,4 @@
-/*package ru.otus.module3.catsconcurrency.cats_effect_homework
+package ru.otus.module3.catsconcurrency.cats_effect_homework
 
 import cats.effect.{IO, IOApp}
 import cats.implicits._
@@ -14,5 +14,6 @@ object WalletMain extends IOApp.Simple {
       _ <- wallet.balance.flatMap(IO.println)
     } yield ()
 
+  // В первый раз выводит 100 и 50
+  // второй раз 150 и 100
 }
-*/
