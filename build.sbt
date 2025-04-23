@@ -13,3 +13,4 @@ libraryDependencies ++= Dependencies.ZIO
 libraryDependencies ++= Dependencies.ZioConfig
 libraryDependencies ++= Dependencies.fs2
 libraryDependencies ++= Dependencies.http4s
+libraryDependencies ++= Dependencies.circe

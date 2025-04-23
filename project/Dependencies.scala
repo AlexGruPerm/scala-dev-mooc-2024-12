@@ -3,7 +3,7 @@ import sbt._
 object Dependencies {
 
   lazy val ZioVersion = "2.1.15"
-
+  lazy val CirceVersion = "0.14.2"
   lazy val ScalaTest = "org.scalatest" %% "scalatest" % "3.2.19"
   lazy val CatsCore = "org.typelevel" %% "cats-core" % "2.13.0"
   lazy val CatsEffect = "org.typelevel" %% "cats-effect" % "3.4.5"
@@ -29,5 +29,14 @@ object Dependencies {
     "org.http4s" %% "http4s-ember-client" % "0.23.18",
 
   )
+
+  lazy val circe = Seq(
+    "io.circe" %% "circe-core" % CirceVersion,
+    "io.circe" %% "circe-generic" % CirceVersion,
+    "io.circe" %% "circe-parser" % CirceVersion,
+    "io.circe" %% "circe-derivation" % "0.13.0-M4",
+    "org.http4s" %% "http4s-circe" % "0.23.14"
+  )
+
 
 }
