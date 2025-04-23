@@ -9,6 +9,7 @@ import java.nio.file.{Files, Paths, StandardOpenOption}
 
 // DSL управления электронным кошельком
 trait Wallet[F[_]] {
+  def getWalletId: WalletId
   // возвращает текущий баланс
   def balance: F[BigDecimal]
   // пополняет баланс на указанную сумму
@@ -32,6 +33,8 @@ trait Wallet[F[_]] {
 final class FileWallet[F[_]: Sync](id: WalletId) extends Wallet[F] {
 
   private val filePath = Paths.get(s"$id.wallet")
+
+  def getWalletId: WalletId = id
 
   def balance: F[BigDecimal] = Sync[F].delay {
     if (Files.exists(filePath)) {
