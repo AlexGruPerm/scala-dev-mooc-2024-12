@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+    http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd ">
+
+    <changeSet author="YakushevAN" id="drop-tables">
+        <comment>Drop all tables</comment>
+        <sqlFile splitStatements="true" path="tables\drop.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet author="YakushevAN" id="create-table-user">
+        <comment>Create user table</comment>
+        <sqlFile splitStatements="true" path="tables\user.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet author="YakushevAN" id="create-table-role">
+        <comment>Create role table</comment>
+        <sqlFile splitStatements="true" path="tables\role.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet author="YakushevAN" id="create-user-to-role">
+        <comment>Create UserToRole table</comment>
+        <sqlFile splitStatements="true" path="tables\UserToRole.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+</databaseChangeLog>
