@@ -54,7 +54,16 @@ class Impl(userRepo: UserRepository) extends UserService {
     } yield result
 
     def listUsersWithRole(roleCode: RoleCode): QIO[List[UserDTO]] =
-        listUsersDTO().map(ur => ur.filter(_.roles.map(_.code).contains(roleCode.code)))
+        //v1. не оптимальная версия listUsersDTO().map(ur => ur.filter(_.roles.map(_.code).contains(roleCode.code)))
+            for {
+                users <- userRepo.listUsersWithRole(roleCode)
+                userRoles <- ZIO.foreachPar(users) { user =>
+                    userRepo.userRoles(user.typedId).map(roles => user -> roles.toSet)
+                }.withParallelism(4)
+            } yield userRoles.map {
+                case (user, roles) => UserDTO(user, roles)
+            }
+
 
 }
 
