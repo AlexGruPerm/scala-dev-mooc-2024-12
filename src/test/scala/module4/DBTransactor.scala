@@ -14,15 +14,15 @@ object DBTransactor {
 
   def hikariDS(config: Config): HikariDataSource = JdbcContextConfig(config).dataSource
 
-  def test: ZLayer[PostgreSQLContainer, Throwable, HikariDataSource] = ZLayer(
+  def test: ZLayer[Any/*PostgreSQLContainer*/, Throwable, HikariDataSource] = ZLayer(
     for {
-      pg <- ZIO.service[PostgreSQLContainer]
+      //pg <- ZIO.service[PostgreSQLContainer]
       config <- ZIO.attempt {
         val hc = new HikariConfig()
-        hc.setUsername(pg.username)
-        hc.setPassword(pg.password)
-        hc.setJdbcUrl(pg.jdbcUrl)
-        hc.setDriverClassName(pg.driverClassName)
+        hc.setUsername("fba")
+        hc.setPassword("fba")
+        hc.setJdbcUrl("jdbc:postgresql://localhost/fba_db")
+        hc.setDriverClassName("org.postgresql.Driver")
         hc
       }
       ds <- ZIO.attempt(new HikariDataSource(config))

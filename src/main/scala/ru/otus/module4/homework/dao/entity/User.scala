@@ -1,6 +1,6 @@
 package ru.otus.module4.homework.dao.entity
 
-case class Role(code: String, name: String)
+case class Role(roleId: String, code: String, name: String)
 
 case class User(
     id: String,

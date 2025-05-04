@@ -24,30 +24,75 @@ trait UserRepository{
 
 
 class UserRepositoryImpl extends UserRepository {
-    val dc = db.Ctx
+    private val dc = db.Ctx
     import dc._
 
-    override def findUser(userId: UserId): QIO[Option[User]] = ???
+/*    private val userSchema = quote {
+        querySchema[User]("Users")  // Теперь таблица будет называться "users" вместо "User"
+    }*/
 
-    override def createUser(user: User): QIO[User] = ???
+    private val userSchema = quote{
+        querySchema[User]("users")
+    }
 
-    override def createUsers(users: List[User]): QIO[List[User]] = ???
+    private val UserToRoleSchema = quote{
+        querySchema[UserToRole]("usertorole")
+    }
 
-    override def updateUser(user: User): QIO[Unit] = ???
+    private val RoleSchema = quote{
+        querySchema[Role]("roles")
+    }
 
-    override def deleteUser(user: User): QIO[Unit] = ???
+    override def findUser(userId: UserId): QIO[Option[User]] =
+        dc.run(userSchema.filter(_.id == lift(userId.id)).take(1)).map(_.headOption)
 
-    override def findByLastName(lastName: String): QIO[List[User]] = ???
+    override def createUser(user: User): QIO[User] =
+        dc.run(userSchema.insertValue(lift(user)).returning(insertedRow => insertedRow))
 
-    override def list(): QIO[List[User]] = ???
+    override def createUsers(users: List[User]): QIO[List[User]] =
+        dc.run(liftQuery(users).foreach(u => userSchema.insertValue(u).returning(insertedRow => insertedRow)))
+    //dc.run(liftQuery(users).foreach(u => userSchema.insertValue(u))).as(users) ???
 
-    override def userRoles(userId: UserId): QIO[List[Role]] = ???
+    override def updateUser(user: User): QIO[Unit] =
+        dc.run(userSchema.filter(_.id == lift(user.id)).updateValue(lift(user))).unit
 
-    override def insertRoleToUser(roleCode: RoleCode, userId: UserId): QIO[Unit] = ???
+    override def deleteUser(user: User): QIO[Unit] =
+        dc.run(userSchema.filter(_.id == lift(user.id)).delete).unit
 
-    override def listUsersWithRole(roleCode: RoleCode): QIO[List[User]] = ???
+    override def findByLastName(lastName: String): QIO[List[User]] =
+        dc.run(userSchema.filter(_.lastName == lift(lastName)))
 
-    override def findRoleByCode(roleCode: RoleCode): QIO[Option[Role]] = ???
+    override def list(): QIO[List[User]] =
+        dc.run(userSchema)
+
+    override def userRoles(userId: UserId): QIO[List[Role]] =
+        dc.run(
+            UserToRoleSchema.filter(_.userId == lift(userId.id))
+              .join(RoleSchema)
+              .on(_.roleId == _.roleId)
+              .map(_._2))
+
+    override def insertRoleToUser(roleCode: RoleCode, userId: UserId): QIO[Unit] =
+       for {
+        optRole <- findRoleByCode(roleCode)
+        _ <- optRole match {
+            case Some(role) => dc.run(UserToRoleSchema.insertValue(lift(UserToRole(role.roleId, userId.id)))).unit
+            case None => ZIO.unit
+        }
+    } yield ()
+
+    override def listUsersWithRole(roleCode: RoleCode): QIO[List[User]] =
+        dc.run(
+            RoleSchema.filter(_.code == lift(roleCode.code))
+              .join(UserToRoleSchema)
+              .on(_.roleId == _.roleId)
+              .join(userSchema)
+              .on(_._2.userId == _.id)
+              .map(_._2)
+        )
+
+    override def findRoleByCode(roleCode: RoleCode): QIO[Option[Role]] =
+        dc.run(RoleSchema.filter(_.code == lift(roleCode.code))).map(_.headOption)
 }
 
 object UserRepository{

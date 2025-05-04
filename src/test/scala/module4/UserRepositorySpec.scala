@@ -94,7 +94,6 @@ object UserRepositorySpec extends ZIOSpecDefault {
         user = users.last
         _ <- userRepo.deleteUser(user)
         all <- userRepo.list()
-
       } yield assert(all.length)(equalTo(9)) &&
         assert(all.toSet)(equalTo(users.filter(_.id != user.id).toSet))
 
@@ -111,7 +110,7 @@ object UserRepositorySpec extends ZIOSpecDefault {
     ) @@ migrate(),
 
   ).provideShared(
-    TestContainer.postgres(),
+    //TestContainer.postgres(),
     DBTransactor.test,
     LiquibaseService.liquibaseLayer,
     UserRepository.layer
