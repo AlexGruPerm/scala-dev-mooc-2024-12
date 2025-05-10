@@ -66,7 +66,7 @@ object  MonadErrorExample extends  App {
 // MonadCancel
 //MonadCancel[F[_], E]
 import cats.effect.{IO, MonadCancel}
-
+/*
 object TestMonadCancel extends App {
   implicit val ec = scala.concurrent.ExecutionContext.Implicits.global
   val io: IO[Int] = IO.sleep(3.seconds) *> IO.pure(42)
@@ -144,3 +144,4 @@ object TestClock extends App {
 //  }).start()
 //}
 
+*/
